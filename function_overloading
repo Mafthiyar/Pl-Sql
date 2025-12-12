@@ -1,0 +1,47 @@
+Function Overloading:
+===================
+	- Passing different no.of parameters to the same function is known as FOL.
+		Ex:
+			Function F1(x number,y number);
+			Function F1(x number,y number,z number);
+
+
+SQL> CREATE OR REPLACE PACKAGE PK3
+  2  IS
+  3  FUNCTION F2(X IN NUMBER, Y IN NUMBER) RETURN NUMBER;
+  4  FUNCTION F2(X IN NUMBER, Y IN NUMBER, Z IN NUMBER) RETURN NUMBER;
+  5  END;
+  6  /
+
+Package created.
+
+SQL> CREATE OR REPLACE PACKAGE BODY PK3
+  2  IS
+  3  FUNCTION F2(X IN NUMBER, Y IN NUMBER)
+  4  RETURN NUMBER
+  5  AS
+  6  BEGIN
+  7  RETURN (X * Y);
+  8  END F2;
+  9  FUNCTION F2(X IN NUMBER, Y IN NUMBER, Z IN NUMBER)
+ 10  RETURN NUMBER
+ 11  AS
+ 12  BEGIN
+ 13  RETURN (X+Y+Z);
+ 14  END F2;
+ 15  END;
+ 16  /
+
+Package body created.
+
+SQL> SELECT PK3.F2(2,3) FROM DUAL;
+
+PK3.F2(2,3)
+-----------
+          6
+
+SQL> SELECT PK3.F2(2,3,5) FROM DUAL;
+
+PK3.F2(2,3,5)
+-------------
+           10
