@@ -1,0 +1,69 @@
+create a package to bind multiple stored procedures?
+
+SQL> SELECT * FROM EMP;
+
+     EMPNO DNAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7369 SMITH      CLERK           7902 17-DEC-80        800        400         20
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
+      7654 ARTIN      SALESMAN        7698 28-SEP-81       1250       1400         30
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
+      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10
+      7788 SCOTT      ANALYST         7566 09-DEC-82       3000                    20
+      7839 KING       PRESIDENT            17-NOV-81       5000                    10
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500        400         30
+      7876 ADAMS      CLERK           7788 12-JAN-83       1100                    20
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
+      7934 ILLER      CLERK           7782 23-JAN-82       1300                    10
+
+14 rows selected.
+
+SQL> CREATE OR REPLACE PACKAGE PK2
+  2  AS
+  3  PROCEDURE P1 (X IN NUMBER);
+  4  FUNCTION F1(P_NAME VARCHAR2) RETURN NUMBER;
+  5  END;
+  6  /
+
+Package created.
+
+SQL> CREATE OR REPLACE PACKAGE BODY PK2
+  2  IS
+  3  PROCEDURE P1 (X IN NUMBER)
+  4  IS
+  5  P_NAME VARCHAR2(10);
+  6  P_JOB VARCHAR2(10);
+  7  BEGIN
+  8  SELECT DNAME,JOB INTO P_NAME,P_JOB FROM EMP WHERE EMPNO = X;
+  9  DBMS_OUTPUT.PUT_LINE(P_NAME);
+ 10  DBMS_OUTPUT.PUT_LINE(P_JOB);
+ 11  END P1;
+ 12  FUNCTION F1 (P_NAME VARCHAR2)
+ 13  RETURN NUMBER
+ 14  AS
+ 15  P_TOTAL NUMBER(8,2);
+ 16  BEGIN
+ 17  SELECT SUM(SAL) INTO P_TOTAL FROM EMP WHERE JOB = P_NAME;
+ 18  RETURN P_TOTAL;
+ 19  END F1;
+ 20  END;
+ 21  /
+
+Package body created.
+
+
+SQL> SELECT PK2.F1('CLERK') FROM DUAL;
+
+PK2.F1('CLERK')
+---------------
+           4150
+
+SQL> SET SERVEROUTPUT ON;
+SQL> EXECUTE PK2.P1(7788);
+SCOTT
+ANALYST
+
+PL/SQL procedure successfully completed.
