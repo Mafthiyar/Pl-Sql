@@ -1,0 +1,23 @@
+AUDITING:
+=========
+	- when we perform operations on a table those operational information will store 
+in an other table is known as "Auditing Table".
+
+EX:
+SQL> CREATE TABLE TEST(STID NUMBER(4),SNAME VARCHAR2(10),SFEE NUMBER(8,2));
+SQL> CREATE TABLE TEST_AUDIT(STID NUMBER(4),AUDIT_INFR VARCHAR2(100));
+
+Auditing on INSERT command:
+==========================
+SQL> CREATE OR REPLACE TRIGGER TRAUDIT1
+    BEFORE INSERT ON TEST
+    FOR EACH ROW
+    BEGIN
+    INSERT INTO TEST_AUDIT VALUES(:NEW.STID,'You inserted a new row into a table on:'||TO_CHAR(SYSDATE,'DD-MON-YYYY HH:MI:SS PM'));
+    END;
+    /
+TESTING:
+=========
+SQL> INSERT INTO TEST VALUES(1,'ALLEN',23000);
+SQL> SELECT * FROM TEST;
+SQL> SELECT * FROM TEST_AUDIT;
